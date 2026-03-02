@@ -1,6 +1,7 @@
 package com.stream;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class StringBased {
 	
@@ -80,6 +82,24 @@ public class StringBased {
 		String[] strArr = {"abc","123","456","xyz"};
 		List<Integer> onlyInt = Arrays.stream(strArr).filter( x -> x.matches("[1-9]+")).map(Integer::valueOf).toList();
 		System.out.println("The only Integer list is "+onlyInt);
+		
+		
+		//Group the anagram from the list of string
+		//[[pat,tap],[pan,nap],[Team,meat],[tree]]
+		
+		String [] ang = {"pat","tap","pan","nap","Team","tree","meat"};
+		List<String> lst = Arrays.asList(ang);
+		Map<Object, List<String>> mapwrd = lst.stream().collect(Collectors.groupingBy(x -> Arrays.stream(x.toLowerCase().split("")).sorted().toList()));
+		System.out.println(mapwrd);
+		Collection<List<String>> mapwrd1 = lst.stream().collect(Collectors.groupingBy(x -> Arrays.stream(x.toLowerCase().split("")).sorted().toList())).values();
+		System.out.println(mapwrd1);
+		
+		//Group the string based on the middle character  {"ewe","jji","jhj","kwk","aha"} op=[w=["ewe","kwk"],h=["jhj","aha"],j=["jji"]]
+		
+		String[] gArr = {"ewe","jji","jhj","kwk","aha"};
+		//Arrays.asList(gArr).stream can also be replaced by Stream.of(gArr)
+		Map<String, List<String>> grpArr = Stream.of(gArr).collect(Collectors.groupingBy(x-> x.toString().substring(1, 2)));
+		System.out.println(grpArr);
 		
 		
 	}

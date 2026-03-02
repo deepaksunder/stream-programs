@@ -1,11 +1,15 @@
 package com.stream;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class IntegerBased {
 	
@@ -42,7 +46,45 @@ public class IntegerBased {
 	  int elmAns = Arrays.stream(elm).boxed()//without converting the stream to list we get unorder element
 			  .limit(2).reduce(1,(a,b)->a*b); 
 	  System.out.println("The product of 1st 2 element is "+elmAns);
+	  
+	//Multiply alternative numbers in a array
+	  int[] ipArr = {4,5,1,7,2,9,2};
+	  int mulAns = IntStream.range(0, ipArr.length).filter( x -> x%2 == 0).map( i -> ipArr[i]).reduce(1, (a,b)->a*b);
+	  System.out.println("The product of alternative number is "+mulAns);
 	    
+	  //multiply 1 and last element, 2nd & 2nd last element, etc numbers in a arrya {4,5,1,7,2,9}; op 4*9, 5*2, 1*7 
+	  int[] nums = {4,5,1,7,2,9};
+	  IntStream.range(0, nums.length/2).map(indx -> nums[indx] * nums[nums.length-indx-1]).forEach(System.out::println);
+	  
+	  //move all the zeros to beging of the array zarr={5,0,1,0,8,0} op={0,0,0,5,1,8}
+	  int[] zarr={5,0,1,0,8,0};
+	  //approach1
+	  List<Integer> tlist = Arrays.stream(zarr).boxed().collect(Collectors.toList());
+	  List<Integer> zeroList = tlist.stream().filter(x -> x == 0 ).toList();
+	  List<Integer> nonZeroList = tlist.stream().filter(x -> x != 0 ).toList();
+	  List<Integer> finalList = new ArrayList<>();
+	  finalList.addAll(zeroList);
+	  finalList.addAll(nonZeroList);
+	  System.out.println("Approach 1 " +finalList);
+	  //approach2
+	  Map<Boolean, List<Integer>> mgMap =  tlist.stream().collect(Collectors.partitioningBy( x -> x != 0));
+	  System.out.println(mgMap);
+	  System.out.println("Approach 2 "+mgMap.values());
+	  List<Integer>mgList =  mgMap.values().stream().flatMap( x -> x.stream()).collect(Collectors.toList());
+	  System.out.println("Approach 2 "+mgList);
+	  
+	  //given an array of integer return true if it contains distinct values
+	  int[] disArr={5,0,1,0,8,0};
+	  List<Integer> disList = Arrays.stream(disArr).boxed().toList();
+	  boolean isDistinct = disList.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting())).values().stream().noneMatch(x->x>1);
+	  System.out.println("Is the list distinct "+isDistinct);
+	  
+	  //find the sum of all the integer in a array arr = {1,2,3,4,5} op = 15
+	  int[] arr22 = {1,2,3,4,5};
+	int sunVal = Arrays.stream(arr22).boxed().map(Integer::intValue).reduce(0,(a,b)->a+b);
+	// we can also use
+	int sun1Val = Arrays.stream(arr22).boxed().mapToInt(Integer::intValue).sum();
+	System.out.println("Approach1 value :"+sunVal+" Approach2 value :"+sun1Val);
 	}
 
 }
