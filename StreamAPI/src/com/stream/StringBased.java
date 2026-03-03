@@ -7,10 +7,33 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+class Employee{
+	private String name;
+	private String email;
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public Employee(String name, String email) {
+		super();
+		this.name = name;
+		this.email = email;
+	}
+	
+}
 public class StringBased {
 	
 	public static void main(String[] args) {
@@ -101,6 +124,37 @@ public class StringBased {
 		Map<String, List<String>> grpArr = Stream.of(gArr).collect(Collectors.groupingBy(x-> x.toString().substring(1, 2)));
 		System.out.println(grpArr);
 		
+		//sort a list of strings in alphabetic order
+		List<String> wordList = Arrays.asList("Zudio","Puma","Addidas","MAC","H&M");
+		System.out.println("Sort the list of words in ascending order");
+		wordList.stream().sorted().forEach(System.out::println);
+		
+		//Remove a non numeric character from the list of String
+		List<String> list28 = Arrays.asList("a1b2b3", "d4e5f6","g7h8i9","1a2b3c","654abc" );
+		Pattern pattern = Pattern.compile("[^0-9]");
+		List<String> res28 = list28.stream().map(x -> pattern.matcher(x).replaceAll("")).toList();
+		System.out.println("After removing non numeric character "+res28);
+		
+		//Find & print only the string containing digit 
+		List<String> list29 = Arrays.asList("12345","12abc","xyz","456");
+		List<String> resu29 =  list29.stream().filter(x -> x.matches("[0-9]+")).toList();
+		System.out.println("THe list with only digit is "+resu29);
+		
+		//convert a list of string to upper case
+		List<String> list30 = Arrays.asList("barking dog", "Never bits");
+		List<String> resu30 = list30.stream().map(String::toUpperCase).toList();
+		System.out.println("Converted list of uppercase string is "+resu30);
+		
+		//From the list of employee object with name & email, find the list of domain like gmail.com, yahoo.com etc
+		Employee e1 = new Employee("sharvin", "sharvin@gmail.com");
+		Employee e2 = new Employee("murugan", "shakthi.murugan@yahoo.com");
+		Employee e3 = new Employee("selvum", "selvum.@cool@yahoo.com");
+		List<Employee> empList = Arrays.asList(e1,e2,e3);
+		
+		Map<String, Long> domainCount =  empList.stream().map( x -> x.getEmail().
+				substring(x.getEmail().lastIndexOf('@'))).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+		//if dont use lastIndexOf then the output will be {@cool@yahoo.com=1, @gmail.com=1, @yahoo.com=1}
+		System.out.println("The domain count of the employees are "+domainCount);
 		
 	}
 	
