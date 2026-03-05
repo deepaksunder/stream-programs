@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collector;
@@ -156,6 +157,32 @@ public class StringBased {
 		//if dont use lastIndexOf then the output will be {@cool@yahoo.com=1, @gmail.com=1, @yahoo.com=1}
 		System.out.println("The domain count of the employees are "+domainCount);
 		
+		//Transform Person object stream into single stream consisting of all names in upper case seperated by '|'
+		Person p1 = new Person("ram", 20);
+		Person p2 = new Person("sam", 21);
+		Person p3 = new Person("sharvin", 22);
+		Person p4 = new Person("Rahul", 24);
+		List<Person> personList = Arrays.asList(p1,p2,p3,p4);
+		String person = personList.stream().map(pe -> pe.getName().toUpperCase()).reduce((a, b) -> a + "|" + b).get().toString();
+		System.out.println("Approach 1 The transformed person name "+person);
+		String result = personList.stream()
+			    .map(pe -> pe.getName().toUpperCase())
+			    .collect(Collectors.joining("|"));
+		System.out.println("Approach 2 The transformed person name "+result);
+
+		//Approach 3 
+		Collector<Person, StringJoiner, String> personCollector = Collector.
+				of(()-> new StringJoiner("|"),
+					(j,p) -> j.add(p.name.toString().toUpperCase()),
+				   (j1,j2) -> j1.merge(j2),
+				   StringJoiner::toString);
+		String names = personList.stream().collect(personCollector);
+		System.out.println("Approach 3 with custom collector "+ names);
+		
+		//Given a lsit of string group then by their first character & count the number of strings in each group
+		List<String> stringList = Arrays.asList("apple", "banana", "apricot","cherry","blueberry","avocado");
+		Map<Character, Long> charsMap = stringList.stream().collect(Collectors.groupingBy(x->x.charAt(0), Collectors.counting() ));
+		System.out.println("prgm 37 group the string based on first character "+charsMap);
 	}
 	
 

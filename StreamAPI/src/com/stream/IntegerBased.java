@@ -125,12 +125,27 @@ public class IntegerBased {
 	System.out.println("The intersection of 2 list is approach1 "+intRes1);
 	System.out.println("The intersection of 2 list is approach2 "+intRes2);
 	
-	
-	
-	
-	
-	
-	
+	//Generate the first 10 numbers of Fibonacci series
+	int a=0,b=1;
+	System.out.print(a+" ");
+	for(int i =1;i<10;i++) {
+		System.out.print(b+" ");
+		int sum = a+b;
+		a = b;
+		b= sum ;
+	}
+	System.out.println(" ");
+	List<Integer> fibo = Stream.iterate(new int[] {0,1}, 
+									f->new int[] { f[1], f[0]+f[1]}).limit(10).map(f ->f[0]).toList();
+	System.out.println("Stream based Fib is "+fibo);
+	Stream.iterate(0, n -> n + 2)
+    .limit(5)
+    .forEach(System.out::println);
+
+   //COnvert a list of integer to their square
+	List<Integer> list35 = Arrays.asList(1,2,3,4,5);
+	List<Integer> res35 = list35.stream().map(x -> x*x).toList();
+	System.out.println("The square of Integer list is "+res35);
 	
 	
 	
